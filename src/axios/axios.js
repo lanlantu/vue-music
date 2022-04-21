@@ -5,7 +5,7 @@ const request=axios.create({
 
 request.interceptors.response.use(
     response => {
-    
+          console.log(response);
         if (response.status === 200 && response.data.code === 200) {
           return response.data
         }
