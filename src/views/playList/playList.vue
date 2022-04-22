@@ -1,13 +1,30 @@
 <template>
-  <div>正在播放列表</div>
+  <div class="playList">
+      <music-list></music-list>
+  </div>
 </template>
 
 <script>
-export default {
+import musicList from '@/components/music-list/music-list.vue';
 
-}
+export default {
+  components: { musicList },
+  data() {
+    return {
+      list: [],
+    };
+  },
+  created() {
+   
+  
+  },
+};
 </script>
 
-<style>
+<style lang="less" scoped>
+.playList {
+  width: 100%;
+  height: calc(100% - 60px);
 
+}
 </style>

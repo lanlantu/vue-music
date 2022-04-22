@@ -32,7 +32,6 @@ export default {
 <style lang="less">
 .music {
   box-sizing: border-box;
-  background-color: aliceblue;
   max-width: 1800px;
   width: 100%;
   height: 100%;
@@ -40,19 +39,17 @@ export default {
   .music-content {
     display: flex;
     width: 100%;
-    height: 100%;
     height: calc(100% - 80px);
+    background-color: brown;
     .music-left {
       flex: 1;
       height: 100%;
-      background-color: aqua;
     }
     .music-right {
+      background-color: greenyellow;
       height: 100%;
       width: 300px;
       margin-left: 10px;
-
-      background-color: chartreuse;
     }
   }
 
