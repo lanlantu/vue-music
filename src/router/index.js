@@ -5,7 +5,11 @@ Vue.use(VueRouter)
 const routes=[
     {
         path:'/',
-        component: () => import('@/views/test')
+        redirect: '/music'
+    },
+    {
+        path:'/music',
+        component:()=>import('@/views/music')
     }
 
 ]

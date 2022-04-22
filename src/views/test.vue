@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import {getToplistDetail,getTest} from '@/axios/api'
+import {getToplistDetail} from '@/axios/api'
 export default {
       name:'Test',
       data() {
@@ -22,14 +22,9 @@ export default {
       })
       .catch(() => {})
       
-       this.getHello()
       },
       methods: {
-        getHello(){
-            getTest().then(()=>{})
-            .catch(()=>{
-               })
-        }
+    
       },
 }
 </script>
