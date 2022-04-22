@@ -1,6 +1,14 @@
 <template>
   <div class="music">
-    我是music页面
+    <div class="music-content">
+      <div class="music-left">
+      <music-btn/>
+      <keep-alive>
+      <router-view></router-view>
+      </keep-alive>
+      </div>
+      <div class="music-right"></div>
+    </div>
 
     <!--遮罩-->
     <div class="music-bg"></div>
@@ -9,7 +17,9 @@
 </template>
 
 <script>
+import musicBtn from '@/components/music-btn/music-btn.vue';
 export default {
+  components: { musicBtn },
   name: "Music",
   data() {
     return {};
@@ -21,14 +31,34 @@ export default {
 
 <style lang="less">
 .music {
+  box-sizing: border-box;
+  background-color: aliceblue;
+  max-width: 1800px;
   width: 100%;
   height: 100%;
+  margin: 0 auto;
+  .music-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    height: calc(100% - 80px);
+    .music-left {
+      flex: 1;
+      height: 100%;
+      background-color: aqua;
+    }
+    .music-right {
+      height: 100%;
+      width: 300px;
+      margin-left: 10px;
 
+      background-color: chartreuse;
+    }
+  }
 
-
-  // 遮罩
-  .music-bg,
-  .music-mask{
+  /*遮罩*/
+  .music-mask,
+  .music-bg {
     position: absolute;
     top: 0;
     right: 0;
@@ -36,7 +66,7 @@ export default {
     bottom: 0;
   }
 
-   .mmPlayer-mask {
+  .music-mask {
     z-index: -1;
     background-color: @mask_color;
   }
@@ -45,11 +75,12 @@ export default {
     background-image: url(@/assets/background/4.jpg);
     background-repeat: no-repeat;
     background-size: cover;
-    z-index: -1;
+    background-position: 50%;
+    filter: blur(2px);
+    z-index: -2;
     opacity: 0.5;
-    transition: all 2s;
-     transform: scale(1.1);
-
+    transition: all 0.8s;
+    transform: scale(1.1);
   }
 }
 </style>
