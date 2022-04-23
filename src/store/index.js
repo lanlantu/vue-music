@@ -1,15 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import state from './state'
+import  * as getters from './getters'
+import * as actions from './actions'
+import  mutations from './mutations'
 Vue.use(Vuex)
-const actions={
-
-}
 
 
-const state={
-    playlist: [], // 播放列表
-}
+
 
 export default  new Vuex.Store({
-    state
+    state,
+    getters,
+    actions,
+    mutations
 })

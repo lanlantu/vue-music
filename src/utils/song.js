@@ -36,7 +36,6 @@ export const formatTopSongs = function formatTopList(list) {
     })
   }
 
-
   //http 链接转化成 https
 export function toHttps(url) {
   if (!isString(url)) {

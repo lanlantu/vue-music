@@ -28,7 +28,8 @@
 
           <span class="list-artist">{{ item.singer }}</span>
           <span v-if="true" class="list-time">
-            {{ item.duration % 3600 | format }}
+            <!-- {{ item.duration % 3600 | format }} -->
+            {{item.duration  | format}}
             <music-icon
               class="hover list-menu-icon-del"
               type="delete-mini"
@@ -40,34 +41,47 @@
         </div>
       </div>
     </template>
-    <div v-else>什么也没有</div>
+    <div v-else>未查到数据</div>
   </div>
 </template>
 
 <script>
-import { getPlaylistDetail } from "@/axios/api";
 import { format } from "@/utils/util";
 import musicIcon from "@/base/music-icon/music-icon.vue";
+
+const LIST_TYPE_ALBUM = 'album'
+const LIST_TYPE_DURATION = 'duration'
+const LIST_TYPE_PULLUP = 'pullup'
 export default {
   components: { musicIcon },
+  props:{
+      list: {
+          type:Array,
+          default:()=>[]
+      },
+      listType:{
+            type:String,
+            default:LIST_TYPE_ALBUM
+      }
+
+  },
   data() {
     return {
-      list: [],
     };
   },
   filters: {
     format,
   },
+  computed: {
+    
+  },
   created() {
-    const defaultSheetId = 3778678;
-    getPlaylistDetail(defaultSheetId).then((playlist) => {
-      this.list = playlist.tracks.slice(0, 100);
-    });
+
   },
   methods: {
-    selectItem(item, index) {
-      console.log(item);
-      console.log(index);
+    selectItem(item, index,e) {
+        this.$emit('select',item,index)
+
     },
     deleteItem() {
       console.log("delete");
@@ -104,7 +118,8 @@ export default {
   }
   .list-content {
     width: 100%;
-    height: calc(100% - 60px);
+    background-color: aqua;
+    height: calc(~'100% - 60px');
     overflow-x: hidden;
     overflow-y: auto;
   }

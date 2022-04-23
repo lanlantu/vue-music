@@ -16,8 +16,8 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/api': {
-        //target: 'http://localhost:3000',
-        target: 'https://cloud-music-api-red-rho.vercel.app',
+        target: 'http://localhost:3000',
+        // target: 'https://cloud-music-api-red-rho.vercel.app',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

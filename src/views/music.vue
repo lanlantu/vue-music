@@ -2,10 +2,10 @@
   <div class="music">
     <div class="music-content">
       <div class="music-left">
-      <music-btn/>
-      <keep-alive>
-      <router-view></router-view>
-      </keep-alive>
+        <music-btn />
+        <keep-alive>
+          <router-view class="music-list" />
+        </keep-alive>
       </div>
       <div class="music-right"></div>
     </div>
@@ -17,33 +17,65 @@
 </template>
 
 <script>
-import musicBtn from '@/components/music-btn/music-btn.vue';
+import { mapActions, mapGetters } from "vuex";
+import { getPlaylistDetail } from "@/axios/api";
+import musicBtn from "@/components/music-btn/music-btn.vue";
 export default {
   components: { musicBtn },
   name: "Music",
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["audioEle", "playing", "currentMusic"]),
+  },
+  watch: {
+    currentMusic(newMusic, oldMusic) {
+      console.log(newMusic);
+      console.log(oldMusic);
+      if (!newMusic.id) {
+        console.log("我被返回了");
+        return;
+      }
+      if (newMusic.id === oldMusic.id) {
+        return;
+      }
+      this.audioEle.src = newMusic.url;
+      this.audioEle.play()
+    },
+  },
+  created() {
+    const defaultSheetId = 3778678;
+    getPlaylistDetail(defaultSheetId).then((playlist) => {
+      this.list = playlist.tracks.slice(0, 100);
+      this.setPlaylist(playlist.tracks.slice(0, 100));
+    });
+  },
+  methods: {
+    ...mapActions(["setPlaylist"]),
+  },
 };
 </script>
 
 
 <style lang="less">
 .music {
+  padding: 75px 25px 25px 25px;
   box-sizing: border-box;
-  max-width: 1800px;
+  max-width: 1750px;
   width: 100%;
   height: 100%;
   margin: 0 auto;
   .music-content {
     display: flex;
     width: 100%;
-    height: calc(100% - 80px);
-    background-color: brown;
+    height: calc(~"100% - 80px");
     .music-left {
       flex: 1;
       height: 100%;
+      .music-list {
+        height: calc(~"100% - 60px");
+      }
     }
     .music-right {
       background-color: greenyellow;

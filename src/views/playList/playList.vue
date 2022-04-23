@@ -1,30 +1,50 @@
 <template>
   <div class="playList">
-      <music-list></music-list>
+      <music-list
+        :list="playlist"
+        @select="selectItem"
+        ></music-list>
   </div>
 </template>
 
 <script>
+import {mapGetters,mapMutations}  from 'vuex'
 import musicList from '@/components/music-list/music-list.vue';
 
 export default {
   components: { musicList },
   data() {
     return {
-      list: [],
+      
     };
   },
+  computed: {
+    ...mapGetters(['playlist','currentMusic'])
+  },
   created() {
-   
   
+  },
+  methods: {
+    ...mapMutations({
+      setCurrentIndex:'SET_CURRENTINDEX',
+      setPlaying: 'SET_PLAYING',
+    }),
+    selectItem(item,index){
+         if(item.id !== this.currentMusic.id ){
+           this.setCurrentIndex(index);
+            this.setPlaying(true);
+         }
+    }
+    
   },
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .playList {
+   position: relative;
   width: 100%;
-  height: calc(100% - 60px);
+  height: 100%;
 
 }
 </style>
