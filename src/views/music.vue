@@ -10,6 +10,39 @@
       <div class="music-right"></div>
     </div>
 
+    <!-- 底部播放器 -->
+    <div class="music-bar">
+      <div class="music-bar-btns">
+        <music-icon
+          class="pointer"
+          type="Player-previous"
+          :size="36"
+          title="上一曲 Ctrl + Left"
+        />
+        <music-icon
+          class="control-play pointer"
+          type="Playerpause1"
+          :size="36"
+          title="播放暂停 Ctrl + Space"
+        />
+        <music-icon
+          class="pointer"
+          type="Playernext"
+          :size="36"
+          title="下一曲 Ctrl + Right"
+        />
+      </div>
+      <div class="music-music">
+        <div class="music-bar-info">
+          <template>欢迎使用mmPlayer在线音乐播放器</template>
+        </div>
+        <div v-if="false" class="music-bar-time">
+          {{ currentTime | format }}/{{ currentMusic.duration % 3600 | format }}
+        </div>
+      </div>
+      
+    </div>
+
     <!--遮罩-->
     <div class="music-bg"></div>
     <div class="music-mask"></div>
@@ -17,11 +50,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { silencePromise } from "@/utils/util";
 import { getPlaylistDetail } from "@/axios/api";
 import musicBtn from "@/components/music-btn/music-btn.vue";
+import MusicIcon from "@/base/music-icon/music-icon.vue";
 export default {
-  components: { musicBtn },
+  components: { musicBtn, MusicIcon },
   name: "Music",
   data() {
     return {};
@@ -31,17 +66,21 @@ export default {
   },
   watch: {
     currentMusic(newMusic, oldMusic) {
-      console.log(newMusic);
-      console.log(oldMusic);
       if (!newMusic.id) {
-        console.log("我被返回了");
         return;
       }
       if (newMusic.id === oldMusic.id) {
         return;
       }
       this.audioEle.src = newMusic.url;
-      this.audioEle.play()
+      //  silencePromise(this.audioEle.play())
+      this.setPlaying(true);
+    },
+    playing(newPlaying) {
+      const audio = this.audioEle;
+      this.$nextTick(() => {
+        newPlaying ? silencePromise(audio.play()) : audio.pause();
+      });
     },
   },
   created() {
@@ -53,6 +92,9 @@ export default {
   },
   methods: {
     ...mapActions(["setPlaylist"]),
+    ...mapMutations({
+      setPlaying: "SET_PLAYING",
+    }),
   },
 };
 </script>
@@ -83,6 +125,12 @@ export default {
       width: 300px;
       margin-left: 10px;
     }
+  }
+
+  .music-bar {
+    width: 100%;
+    height: 80px;
+    border: 1px solid white;
   }
 
   /*遮罩*/

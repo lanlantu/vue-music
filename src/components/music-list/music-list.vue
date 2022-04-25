@@ -19,7 +19,7 @@
             <div class="list-menu">
               <music-icon
                 class="hover"
-                type="play-mini"
+                :type="getPlayIconType(item)"
                 :size="40"
                 @click.stop="selectItem(item, index)"
               />
@@ -32,8 +32,8 @@
             {{item.duration  | format}}
             <music-icon
               class="hover list-menu-icon-del"
-              type="delete-mini"
-              :size="40"
+              type="shanchu"
+              :size="30"
               @click.stop="deleteItem(index)"
             />
           </span>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import {mapGetters,mapMutations} from 'vuex'
 import { format } from "@/utils/util";
 import musicIcon from "@/base/music-icon/music-icon.vue";
 
@@ -73,19 +74,39 @@ export default {
     format,
   },
   computed: {
-    
+    ...mapGetters(['currentMusic','playing'])
   },
   created() {
 
   },
   methods: {
-    selectItem(item, index,e) {
-        this.$emit('select',item,index)
+    ...mapMutations({
+        setPlaying:'SET_PLAYING'
+    }),
 
+    selectItem(item, index,e) {
+      if(this.currentMusic.id && item.id === this.currentMusic.id){
+        this.setPlaying(!this.playing)
+      }
+        this.$emit('select',item,index)
     },
-    deleteItem() {
-      console.log("delete");
+
+    deleteItem(index) {
+     this.$emit('del', index)
     },
+  
+     // 获取播放状态 type
+    getPlayIconType({id:itemId}) {
+      const {
+        playing,
+        currentMusic:{id}
+      } = this
+      return playing && id === itemId ? 'Playerpause' : 'Playerplay'
+    }
+      
+  
+
+
   },
 };
 </script>

@@ -10,3 +10,14 @@ export function format(value) {
 export function addZero(s) {
   return s < 10 ? '0' + s : s
 }
+
+
+export function isPromise(v) {
+  return v !== undefined && v !== null && typeof v.then === 'function'
+}
+
+export function silencePromise(value) {
+    if (isPromise(value)) {
+    value.then(null, () => {})
+  }
+}

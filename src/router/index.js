@@ -10,6 +10,7 @@ const routes=[
     {
         path:'/music',
         component:()=>import('@/views/music'),
+        redirect:'music/playlist',
         children:[
             {
                 path:'/music/playlist',

@@ -7,7 +7,6 @@ const mutations={
         state.audioEle=audioEle
     },
     SET_CURRENTINDEX(state,currentIndex){
-        console.log('输出');
         state.currentIndex=currentIndex
     },
     SET_PLAYING(state,playing){
