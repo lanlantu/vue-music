@@ -18,18 +18,21 @@
           type="Player-previous"
           :size="36"
           title="上一曲 Ctrl + Left"
+           @click="prev"
         />
         <music-icon
           class="control-play pointer"
-          type="Playerpause1"
+          :type="playing ? 'Playerpause1' : 'Playerstop' "
           :size="36"
           title="播放暂停 Ctrl + Space"
+           @click="play"
         />
         <music-icon
           class="pointer"
           type="Playernext"
           :size="36"
           title="下一曲 Ctrl + Right"
+           @click="next"
         />
       </div>
       <div class="music-music">
@@ -62,7 +65,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["audioEle", "playing", "currentMusic"]),
+    ...mapGetters(["audioEle", "playing", "currentMusic","currentIndex"]),
   },
   watch: {
     currentMusic(newMusic, oldMusic) {
@@ -94,7 +97,22 @@ export default {
     ...mapActions(["setPlaylist"]),
     ...mapMutations({
       setPlaying: "SET_PLAYING",
+      setIndex:'SET_CURRENTINDEX'
     }),
+
+      prev(){
+
+      },
+      play() {
+      // if (!this.musicReady) {
+      //   return
+      // }
+      this.setPlaying(!this.playing)
+    },
+    next(){
+      this.setIndex(this.currentIndex + 1)
+       this.setPlaying(true)
+    }
   },
 };
 </script>
