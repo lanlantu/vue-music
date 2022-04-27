@@ -20,8 +20,6 @@ export default {
   computed: {
   },
   created() {
-
-
        // 设置audio元素
     this.$nextTick(() => {
       this.setAudioEle(this.$refs.lanlantuPlayer)

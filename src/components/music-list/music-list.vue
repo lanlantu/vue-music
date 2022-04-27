@@ -11,6 +11,7 @@
           v-for="(item, index) in list"
           :key="item.id"
           class="list-item"
+           :class="{ on: playing && currentMusic.id === item.id }"
           @dblclick="selectItem(item, index, $event)"
         >
           <span class="list-num">{{ index + 1 }}</span>
@@ -29,11 +30,11 @@
           <span class="list-artist">{{ item.singer }}</span>
           <span v-if="true" class="list-time">
             <!-- {{ item.duration % 3600 | format }} -->
-            {{item.duration  | format}}
+            {{ item.duration | format }}
             <music-icon
               class="hover list-menu-icon-del"
-              type="shanchu"
-              :size="30"
+              type="delete-mini"
+              :size="40"
               @click.stop="deleteItem(index)"
             />
           </span>
@@ -46,67 +47,60 @@
 </template>
 
 <script>
-import {mapGetters,mapMutations} from 'vuex'
+import { mapGetters, mapMutations } from "vuex";
 import { format } from "@/utils/util";
 import musicIcon from "@/base/music-icon/music-icon.vue";
 
-const LIST_TYPE_ALBUM = 'album'
-const LIST_TYPE_DURATION = 'duration'
-const LIST_TYPE_PULLUP = 'pullup'
+const LIST_TYPE_ALBUM = "album";
+const LIST_TYPE_DURATION = "duration";
+const LIST_TYPE_PULLUP = "pullup";
 export default {
   components: { musicIcon },
-  props:{
-      list: {
-          type:Array,
-          default:()=>[]
-      },
-      listType:{
-            type:String,
-            default:LIST_TYPE_ALBUM
-      }
-
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+    listType: {
+      type: String,
+      default: LIST_TYPE_ALBUM,
+    },
   },
   data() {
-    return {
-    };
+    return {};
   },
   filters: {
     format,
   },
   computed: {
-    ...mapGetters(['currentMusic','playing'])
+    ...mapGetters(["currentMusic", "playing"]),
   },
-  created() {
-
-  },
+  created() {},
   methods: {
     ...mapMutations({
-        setPlaying:'SET_PLAYING'
+      setPlaying: "SET_PLAYING",
     }),
 
-    selectItem(item, index,e) {
-      if(this.currentMusic.id && item.id === this.currentMusic.id){
-        this.setPlaying(!this.playing)
+    selectItem(item, index, e) {
+      if (this.currentMusic.id && item.id === this.currentMusic.id) {
+        this.setPlaying(!this.playing);
+        return;
       }
-        this.$emit('select',item,index)
+      this.$emit("select", item, index);
     },
 
     deleteItem(index) {
-     this.$emit('del', index)
+      this.$emit("del", index);
     },
-  
-     // 获取播放状态 type
-    getPlayIconType({id:itemId}) {
+
+    // 获取播放状态 type
+    getPlayIconType({ id: itemId }) {
       const {
         playing,
-        currentMusic:{id}
-      } = this
-      return playing && id === itemId ? 'Playerpause' : 'Playerplay'
-    }
-      
-  
-
-
+        currentMusic: { id },
+      } = this;
+      return playing && id === itemId ? "pause-mini" : "play-mini";
+    },
   },
 };
 </script>
@@ -125,22 +119,22 @@ export default {
       padding-left: 40px;
       user-select: none;
     }
-    .list-artist{
+    .list-artist {
       user-select: none;
     }
-    .list-album{
-       user-select: none;
-      margin-right: 20px;
-    }
-    .list-time{
+    .list-album {
       user-select: none;
       margin-right: 20px;
-  }
+    }
+    .list-time {
+      user-select: none;
+      margin-right: 20px;
+    }
   }
   .list-content {
     width: 100%;
     background-color: aqua;
-    height: calc(~'100% - 60px');
+    height: calc(~"100% - 60px");
     overflow-x: hidden;
     overflow-y: auto;
   }
@@ -151,7 +145,17 @@ export default {
     height: 50px;
     border-bottom: 1px solid @list_item_line_color;
     line-height: 50px;
-    &:not([class*='list-header']):hover {
+
+    &.on {
+      color: #fff;
+
+      .list-num {
+        font-size: 0;
+        background: url("@/assets/img/wave.gif") no-repeat center center;
+      }
+    }
+
+    &:not([class*="list-header"]):hover {
       color: aliceblue;
       .list-name .list-menu {
         display: block;

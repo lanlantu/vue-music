@@ -11,39 +11,51 @@
     </div>
 
     <!-- 底部播放器 -->
-    <div class="music-bar">
+    <div
+      class="music-bar"
+      :class="{ disable: !musicReady || !currentMusic.id }"
+    >
       <div class="music-bar-btns">
         <music-icon
           class="pointer"
-          type="Player-previous"
+          type="prev"
           :size="36"
           title="上一曲 Ctrl + Left"
-           @click="prev"
+          @click="prev"
         />
         <music-icon
           class="control-play pointer"
-          :type="playing ? 'Playerpause1' : 'Playerstop' "
+          :type="playing ? 'pause' : 'play'"
           :size="36"
           title="播放暂停 Ctrl + Space"
-           @click="play"
+          @click="play"
         />
         <music-icon
           class="pointer"
-          type="Playernext"
+          type="next"
           :size="36"
           title="下一曲 Ctrl + Right"
-           @click="next"
+          @click="next"
         />
       </div>
-      <div class="music-music">
+        <div class="music-music">
         <div class="music-bar-info">
-          <template>欢迎使用mmPlayer在线音乐播放器</template>
+          <template v-if="currentMusic && currentMusic.id">
+            {{ currentMusic.name }}
+            <span>- {{ currentMusic.singer }}</span>
+          </template>
+          <template v-else>欢迎使用mmPlayer在线音乐播放器</template>
         </div>
-        <div v-if="false" class="music-bar-time">
+        <div v-if="currentMusic.id" class="music-bar-time">
           {{ currentTime | format }}/{{ currentMusic.duration % 3600 | format }}
         </div>
+          <music-progress
+            class="music-progress"
+          :percent="percentMusic"
+          
+          
+          />
       </div>
-      
     </div>
 
     <!--遮罩-->
@@ -54,20 +66,41 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { silencePromise } from "@/utils/util";
+import { silencePromise,format } from "@/utils/util";
+import  lanlantuPlayerMusic from './lanlantuPlayer'
 import { getPlaylistDetail } from "@/axios/api";
 import musicBtn from "@/components/music-btn/music-btn.vue";
 import MusicIcon from "@/base/music-icon/music-icon.vue";
+import MusicProgress from '@/base/music-progress/music-progress.vue';
 export default {
-  components: { musicBtn, MusicIcon },
+  components: { musicBtn, MusicIcon, MusicProgress },
   name: "Music",
   data() {
-    return {};
+    return {
+      musicReady: false, // 是否可以使用播放器
+      currentTime: 0, // 当前播放时间
+    };
+  },
+  filters:{
+    format
   },
   computed: {
-    ...mapGetters(["audioEle", "playing", "currentMusic","currentIndex"]),
+    ...mapGetters([
+      "audioEle",
+      "playing",
+      "currentMusic",
+      "currentIndex",
+      "playlist",
+    ]),
+
+    percentMusic(){
+      console.log(this.currentTime / this.currentMusic.duration);
+        return this.currentTime / this.currentMusic.duration
+    }
+
   },
   watch: {
+   
     currentMusic(newMusic, oldMusic) {
       if (!newMusic.id) {
         return;
@@ -76,13 +109,13 @@ export default {
         return;
       }
       this.audioEle.src = newMusic.url;
-      //  silencePromise(this.audioEle.play())
-      this.setPlaying(true);
+      silencePromise(this.audioEle.play());
     },
     playing(newPlaying) {
       const audio = this.audioEle;
       this.$nextTick(() => {
         newPlaying ? silencePromise(audio.play()) : audio.pause();
+        this.musicReady = true;
       });
     },
   },
@@ -93,26 +126,75 @@ export default {
       this.setPlaylist(playlist.tracks.slice(0, 100));
     });
   },
+  mounted() {
+    this.$nextTick(() => {
+     lanlantuPlayerMusic.initAudio(this)
+    })
+  },
   methods: {
     ...mapActions(["setPlaylist"]),
     ...mapMutations({
       setPlaying: "SET_PLAYING",
-      setIndex:'SET_CURRENTINDEX'
+      setCurrentIndex: "SET_CURRENTINDEX",
     }),
 
-      prev(){
-
-      },
-      play() {
-      // if (!this.musicReady) {
-      //   return
-      // }
-      this.setPlaying(!this.playing)
+    prev() {
+      if (!this.musicReady) {
+        return;
+      }
+      if (this.playlist.length === 1) {
+        this.loop();
+      } else {
+        let index = this.currentIndex - 1;
+        if (index < 0) {
+          index = this.playlist.length - 1;
+        }
+        this.setCurrentIndex(index);
+        if (!this.playing && this.musicReady) {
+          this.setPlaying(true);
+        }
+        this.musicReady = false;
+      }
     },
-    next(){
-      this.setIndex(this.currentIndex + 1)
-       this.setPlaying(true)
-    }
+    play() {
+      if (!this.musicReady) {
+        return;
+      }
+      this.setPlaying(!this.playing);
+    },
+     // 下一曲
+    // 当 flag 为 true 时，表示上一曲播放失败
+    next(flag = false) {
+      console.log(this.musicReady);
+      if (!this.musicReady) {
+        return
+      }
+      const {
+        playlist: { length }
+      } = this
+      if (length === 1) {
+        this.loop()
+      } else {
+        let index = this.currentIndex + 1
+        if (index === length) {
+          index = 0
+        }
+        if (!this.playing && this.musicReady) {
+          this.setPlaying(true)
+        }
+        this.setCurrentIndex(index)
+        this.musicReady = false
+      }
+    },
+       // 循环
+    loop() {
+      this.audioEle.currentTime = 0
+      silencePromise(this.audioEle.play())
+      this.setPlaying(true)
+      // if (this.lyric.length > 0) {
+      //   this.lyricIndex = 0
+      // }
+    },
   },
 };
 </script>
@@ -149,6 +231,13 @@ export default {
     width: 100%;
     height: 80px;
     border: 1px solid white;
+
+    &.disable {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    .music-bar-btns {
+    }
   }
 
   /*遮罩*/
