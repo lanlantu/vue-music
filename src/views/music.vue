@@ -79,7 +79,7 @@
     </div>
 
     <!--遮罩-->
-    <div class="music-bg"></div>
+    <div class="music-bg" :style="{ backgroundImage: picUrl }"></div>
     <div class="music-mask"></div>
   </div>
 </template>
@@ -87,6 +87,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { silencePromise, format } from "@/utils/util";
+import { defaultBG } from '@/utils/config'
 import { setVolume, getVolume } from "@/utils/storage";
 import lanlantuPlayerMusic from "./lanlantuPlayer";
 import { getPlaylistDetail } from "@/axios/api";
@@ -118,6 +119,11 @@ export default {
       "playlist",
     ]),
 
+    picUrl() {
+      return this.currentMusic.id && this.currentMusic.image
+        ? `url(${this.currentMusic.image}?param=300y300)`
+        : `url(${defaultBG})`
+    },
     percentMusic() {
       return this.currentTime / this.currentMusic.duration;
     },
