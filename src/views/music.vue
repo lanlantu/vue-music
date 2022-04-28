@@ -58,6 +58,7 @@
           class="music-progress"
           :percent="percentMusic"
           :percentProgress="currentProgress"
+          @percentChange="progressMusic"
           @percentChangeEnd="progressMusicEnd"
         />
       </div>
@@ -86,7 +87,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { silencePromise, format } from "@/utils/util";
-import { setVolume,getVolume } from "@/utils/storage";
+import { setVolume, getVolume } from "@/utils/storage";
 import lanlantuPlayerMusic from "./lanlantuPlayer";
 import { getPlaylistDetail } from "@/axios/api";
 import musicBtn from "@/components/music-btn/music-btn.vue";
@@ -97,13 +98,12 @@ export default {
   components: { musicBtn, MusicIcon, MusicProgress, Volume },
   name: "Music",
   data() {
-     
     return {
       musicReady: false, // 是否可以使用播放器
       currentTime: 0, // 当前播放时间
       currentProgress: 0, // 当前缓冲进度
       isMute: false, // 是否静音
-      volume: 1 // 音量大小
+      volume: 1, // 音量大小
     };
   },
   filters: {
@@ -151,8 +151,8 @@ export default {
   mounted() {
     this.$nextTick(() => {
       lanlantuPlayerMusic.initAudio(this);
-      this.volume = getVolume()
-       this.volumeChange(this.volume)
+      this.volume = getVolume();
+      this.volumeChange(this.volume);
     });
   },
   methods: {
@@ -210,6 +210,11 @@ export default {
       }
     },
 
+
+    // 修改音乐显示时长
+    progressMusic(percent) {
+      this.currentTime = this.currentMusic.duration * percent
+    },
     //音乐进度条||等钱音乐播放时间
     progressMusicEnd(percent) {
       this.audioEle.currentTime = percent * this.currentMusic.duration;

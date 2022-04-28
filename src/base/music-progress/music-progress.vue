@@ -4,7 +4,11 @@
     <div class="musicProgress-bar"></div>
     <div ref="musicPercentProgress" class="musicProgress-outer"></div>
     <div ref="musicProgressInner" class="musicProgress-inner">
-      <div class="musicProgress-dot"></div>
+      <div
+        class="musicProgress-dot"
+        @mousedown="barDown"
+        @touchstart.prevent="barDown"
+      ></div>
     </div>
   </div>
 </template>
@@ -42,41 +46,93 @@ export default {
       }
     },
     //缓冲进度条
-       percentProgress(newValue){
-          let offsetWidth = this.$refs.musicProgress.clientWidth * newValue
-         this.$refs.musicPercentProgress.style.width = `${offsetWidth}px`
-    }
+    percentProgress(newValue) {
+      let offsetWidth = this.$refs.musicProgress.clientWidth * newValue;
+      this.$refs.musicPercentProgress.style.width = `${offsetWidth}px`;
+    },
   },
   mounted() {
-      this.$nextTick(() => {
-    
-      const barWidth = this.$refs.musicProgress.clientWidth - dotWidth
-      const offsetWidth = this.percent * barWidth
-      this.moveSilde(offsetWidth)
-    })
+    this.$nextTick(() => {
+      this.bindEvents();
+      const barWidth = this.$refs.musicProgress.clientWidth - dotWidth;
+      const offsetWidth = this.percent * barWidth;
+      this.moveSilde(offsetWidth);
+    });
+  },
+    beforeDestroy() {
+    this.unbindEvents()
   },
   methods: {
+    // 添加绑定事件
+    bindEvents() {
+      document.addEventListener('mousemove', this.barMove)
+      document.addEventListener("mouseup", this.barUp);
+
+        document.addEventListener('touchmove', this.barMove)
+      document.addEventListener('touchend', this.barUp)
+    },
+
+        // 移除绑定事件
+    unbindEvents() {
+      document.removeEventListener('mousemove', this.barMove)
+      document.removeEventListener('mouseup', this.barUp)
+
+      document.removeEventListener('touchmove', this.barMove)
+      document.removeEventListener('touchend', this.barUp)
+    },
+
+    // 鼠标按下事件
+    barDown(e) {
+      this.move.status = true;
+      this.move.startX = e.clientX || e.touches[0].pageX;
+      this.move.left = this.$refs.musicProgressInner.clientWidth;
+    },
+    // 鼠标释放事件
+    barUp(e) {
+      if (this.move.status) {
+        this.commitPercent(true);
+        this.move.status = false;
+      }
+    },
+
+    // 鼠标/触摸移动事件
+    barMove(e) {
+      if (!this.move.status) {
+        return false;
+      }
+      e.preventDefault();
+      let endX = e.clientX || e.touches[0].pageX;
+      
+      let dist = endX - this.move.startX;
+      let offsetWidth = Math.min(
+        this.$refs.musicProgress.clientWidth - dotWidth,
+        Math.max(0, this.move.left + dist)
+      );
+      this.moveSilde(offsetWidth);
+      this.commitPercent();
+    },
+
     barClick(e) {
-        let rect = this.$refs.musicProgress.getBoundingClientRect()
+      let rect = this.$refs.musicProgress.getBoundingClientRect();
       let offsetWidth = Math.min(
         this.$refs.musicProgress.clientWidth - dotWidth,
         Math.max(0, e.clientX - rect.left)
-      )
-      this.moveSilde(offsetWidth)
-      this.commitPercent(true) //修改进度条
+      );
+      this.moveSilde(offsetWidth);
+      this.commitPercent(true); //修改进度条
     },
     // 移动滑块
     moveSilde(offsetWidth) {
       this.$refs.musicProgressInner.style.width = `${offsetWidth}px`;
     },
 
-        // 修改 percent
+    // 修改 percent
     commitPercent(isEnd = false) {
-      const { musicProgress, musicProgressInner } = this.$refs
-      const lineWidth = musicProgress.clientWidth - dotWidth
-      const percent = musicProgressInner.clientWidth / lineWidth
-      this.$emit(isEnd ? 'percentChangeEnd' : 'percentChange', percent)
-    }
+      const { musicProgress, musicProgressInner } = this.$refs;
+      const lineWidth = musicProgress.clientWidth - dotWidth;
+      const percent = musicProgressInner.clientWidth / lineWidth;
+      this.$emit(isEnd ? "percentChangeEnd" : "percentChange", percent);
+    },
   },
 };
 </script>
