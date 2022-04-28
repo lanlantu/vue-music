@@ -17,25 +17,66 @@ export default {
       type: Number,
       default: 0,
     },
-  },
-  mounted() {
-    const barWidth = this.$refs.musicProgress.clientWidth - dotWidth;
-    console.log(barWidth);
-  },
-  watch: {
-    percent(newPercent) {
-      let width = newPercent * (this.$refs.musicProgress.clientWidth - dotWidth);
-      this.moveSilde(width);
+    // 进度值二（歌曲缓冲进度用）
+    percentProgress: {
+      type: [Number],
+      default: 0,
     },
   },
+  data() {
+    return {
+      move: {
+        status: false, // 是否可拖动
+        startX: 0, // 记录最开始点击的X坐标
+        left: 0, // 记录当前已经移动的距离
+      },
+    };
+  },
+
+  watch: {
+    percent(newPercent) {
+      if (newPercent >= 0 && !this.move.status) {
+        const barWidth = this.$refs.musicProgress.clientWidth - dotWidth;
+        const offsetWidth = newPercent * barWidth;
+        this.moveSilde(offsetWidth);
+      }
+    },
+    //缓冲进度条
+       percentProgress(newValue){
+          let offsetWidth = this.$refs.musicProgress.clientWidth * newValue
+         this.$refs.musicPercentProgress.style.width = `${offsetWidth}px`
+    }
+  },
+  mounted() {
+      this.$nextTick(() => {
+    
+      const barWidth = this.$refs.musicProgress.clientWidth - dotWidth
+      const offsetWidth = this.percent * barWidth
+      this.moveSilde(offsetWidth)
+    })
+  },
   methods: {
-    barClick() {
-      this.moveSilde(300);
+    barClick(e) {
+        let rect = this.$refs.musicProgress.getBoundingClientRect()
+      let offsetWidth = Math.min(
+        this.$refs.musicProgress.clientWidth - dotWidth,
+        Math.max(0, e.clientX - rect.left)
+      )
+      this.moveSilde(offsetWidth)
+      this.commitPercent(true) //修改进度条
     },
     // 移动滑块
     moveSilde(offsetWidth) {
-       this.$refs.musicProgressInner.style.width = `${offsetWidth}px`
+      this.$refs.musicProgressInner.style.width = `${offsetWidth}px`;
     },
+
+        // 修改 percent
+    commitPercent(isEnd = false) {
+      const { musicProgress, musicProgressInner } = this.$refs
+      const lineWidth = musicProgress.clientWidth - dotWidth
+      const percent = musicProgressInner.clientWidth / lineWidth
+      this.$emit(isEnd ? 'percentChangeEnd' : 'percentChange', percent)
+    }
   },
 };
 </script>
@@ -59,7 +100,7 @@ export default {
     width: 0;
     height: 2px;
     margin-top: -1px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(8, 235, 8, 0.2);
   }
   .musicProgress-inner {
     position: absolute;

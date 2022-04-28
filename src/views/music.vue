@@ -23,13 +23,18 @@
           title="上一曲 Ctrl + Left"
           @click="prev"
         />
-        <music-icon
+
+        <div
           class="control-play pointer"
-          :type="playing ? 'pause' : 'play'"
-          :size="36"
           title="播放暂停 Ctrl + Space"
           @click="play"
-        />
+        >
+          <music-icon
+            class="bofang"
+            :type="playing ? 'pause' : 'play'"
+            :size="36"
+          />
+        </div>
         <music-icon
           class="pointer"
           type="next"
@@ -38,23 +43,37 @@
           @click="next"
         />
       </div>
-        <div class="music-music">
+      <div class="music-music">
         <div class="music-bar-info">
           <template v-if="currentMusic && currentMusic.id">
             {{ currentMusic.name }}
             <span>- {{ currentMusic.singer }}</span>
           </template>
-          <template v-else>欢迎使用mmPlayer在线音乐播放器</template>
+          <template v-else>欢迎使用lanlantu在线音乐播放器</template>
         </div>
         <div v-if="currentMusic.id" class="music-bar-time">
           {{ currentTime | format }}/{{ currentMusic.duration % 3600 | format }}
         </div>
-          <music-progress
-            class="music-progress"
+        <music-progress
+          class="music-progress"
           :percent="percentMusic"
-          
-          
-          />
+          :percentProgress="currentProgress"
+          @percentChangeEnd="progressMusicEnd"
+        />
+      </div>
+      <!-- 播放模式 -->
+      <music-icon class="icon-color pointer mode" type="loop" :size="30" />
+
+      <!-- 评论 -->
+      <music-icon
+        class="icon-color pointer comment"
+        type="comment"
+        :size="30"
+      />
+
+      <!-- 音量控制 -->
+      <div class="music-bar-volume" title="音量加减 [Ctrl + Up / Down]">
+        <volume :volume="volume" @volumeChange="volumeChange" />
       </div>
     </div>
 
@@ -66,23 +85,29 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { silencePromise,format } from "@/utils/util";
-import  lanlantuPlayerMusic from './lanlantuPlayer'
+import { silencePromise, format } from "@/utils/util";
+import { setVolume,getVolume } from "@/utils/storage";
+import lanlantuPlayerMusic from "./lanlantuPlayer";
 import { getPlaylistDetail } from "@/axios/api";
 import musicBtn from "@/components/music-btn/music-btn.vue";
 import MusicIcon from "@/base/music-icon/music-icon.vue";
-import MusicProgress from '@/base/music-progress/music-progress.vue';
+import MusicProgress from "@/base/music-progress/music-progress.vue";
+import Volume from "@/base/volume/volume.vue";
 export default {
-  components: { musicBtn, MusicIcon, MusicProgress },
+  components: { musicBtn, MusicIcon, MusicProgress, Volume },
   name: "Music",
   data() {
+     
     return {
       musicReady: false, // 是否可以使用播放器
       currentTime: 0, // 当前播放时间
+      currentProgress: 0, // 当前缓冲进度
+      isMute: false, // 是否静音
+      volume: 1 // 音量大小
     };
   },
-  filters:{
-    format
+  filters: {
+    format,
   },
   computed: {
     ...mapGetters([
@@ -93,14 +118,11 @@ export default {
       "playlist",
     ]),
 
-    percentMusic(){
-      console.log(this.currentTime / this.currentMusic.duration);
-        return this.currentTime / this.currentMusic.duration
-    }
-
+    percentMusic() {
+      return this.currentTime / this.currentMusic.duration;
+    },
   },
   watch: {
-   
     currentMusic(newMusic, oldMusic) {
       if (!newMusic.id) {
         return;
@@ -128,8 +150,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-     lanlantuPlayerMusic.initAudio(this)
-    })
+      lanlantuPlayerMusic.initAudio(this);
+      this.volume = getVolume()
+       this.volumeChange(this.volume)
+    });
   },
   methods: {
     ...mapActions(["setPlaylist"]),
@@ -162,38 +186,50 @@ export default {
       }
       this.setPlaying(!this.playing);
     },
-     // 下一曲
+    // 下一曲
     // 当 flag 为 true 时，表示上一曲播放失败
     next(flag = false) {
-      console.log(this.musicReady);
       if (!this.musicReady) {
-        return
+        return;
       }
       const {
-        playlist: { length }
-      } = this
+        playlist: { length },
+      } = this;
       if (length === 1) {
-        this.loop()
+        this.loop();
       } else {
-        let index = this.currentIndex + 1
+        let index = this.currentIndex + 1;
         if (index === length) {
-          index = 0
+          index = 0;
         }
         if (!this.playing && this.musicReady) {
-          this.setPlaying(true)
+          this.setPlaying(true);
         }
-        this.setCurrentIndex(index)
-        this.musicReady = false
+        this.setCurrentIndex(index);
+        this.musicReady = false;
       }
     },
-       // 循环
+
+    //音乐进度条||等钱音乐播放时间
+    progressMusicEnd(percent) {
+      this.audioEle.currentTime = percent * this.currentMusic.duration;
+    },
+    // 循环
     loop() {
-      this.audioEle.currentTime = 0
-      silencePromise(this.audioEle.play())
-      this.setPlaying(true)
+      this.audioEle.currentTime = 0;
+      silencePromise(this.audioEle.play());
+      this.setPlaying(true);
       // if (this.lyric.length > 0) {
       //   this.lyricIndex = 0
       // }
+    },
+
+    //修改音量大小
+    volumeChange(percent) {
+      percent === 0 ? (this.isMute = true) : (this.isMute = false);
+      this.volume = percent;
+      this.audioEle.volume = percent;
+      setVolume(percent);
     },
   },
 };
@@ -228,15 +264,58 @@ export default {
   }
 
   .music-bar {
+    display: flex;
+    align-items: center;
     width: 100%;
     height: 80px;
     border: 1px solid white;
+    color: #fff;
 
     &.disable {
       pointer-events: none;
       opacity: 0.6;
     }
     .music-bar-btns {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 180px;
+      .control-play {
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.3);
+        .bofang {
+          transform: translate(2px, 2px);
+        }
+      }
+    }
+
+    .music-music {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      padding-left: 40px;
+      font-size: @font_size_small;
+      color: @text_color_active;
+      .music-bar-info {
+        height: 15px;
+        padding-right: 80px;
+        line-height: 15px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .music-bar-time {
+        position: absolute;
+        top: 0;
+        right: 5px;
+      }
+    }
+
+    .mode,
+    .comment,
+    .music-bar-volume {
+      margin-left: 20px;
     }
   }
 
