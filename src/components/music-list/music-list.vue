@@ -133,13 +133,12 @@ export default {
   }
   .list-content {
     width: 100%;
-    background-color: aqua;
     height: calc(~"100% - 60px");
     overflow-x: hidden;
     overflow-y: auto;
+     color: @text_color;
   }
   .list-item {
-    background-color: plum;
     display: flex;
     width: 100%;
     height: 50px;
@@ -176,7 +175,6 @@ export default {
     .list-name {
       position: relative;
       flex: 1;
-      background-color: aqua;
       & > span {
         text-overflow: ellipsis;
         overflow: hidden;
@@ -198,7 +196,6 @@ export default {
     .list-album {
       display: block;
       width: 300px;
-      background-color: red;
     }
 
     .list-time {

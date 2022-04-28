@@ -15,7 +15,6 @@ export default {};
 .music-btn {
   width: 100%;
   height: 60px;
-  background-color: antiquewhite;
   span {
     display: inline-block;
     box-sizing: border-box;
