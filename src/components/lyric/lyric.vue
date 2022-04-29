@@ -40,69 +40,66 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Lyric',
+  name: "Lyric",
   props: {
     // 歌词数据
     lyric: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     // 是否无歌词
     nolyric: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // 当前歌词下标
     lyricIndex: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   data() {
     return {
-      top: 0 // 歌词居中
-    }
+      top: 0, // 歌词居中
+    };
   },
   computed: {
     musicPicUrl() {
       return this.currentMusic.id
         ? `${this.currentMusic.image}?param=300y300`
-        : require('@/assets/img/player_cover.png')
+        : require("@/assets/img/player_cover.png");
     },
     lyricTop() {
-      return `transform :translate3d(0, ${-34 *
-        (this.lyricIndex - this.top)}px, 0)`
+      return `transform :translate3d(0, ${
+        -34 * (this.lyricIndex - this.top)
+      }px, 0)`;
     },
-    ...mapGetters(['currentMusic'])
+    ...mapGetters(["currentMusic"]),
   },
   mounted() {
-    window.addEventListener('resize', () => {
-      clearTimeout(this.resizeTimer)
-      this.resizeTimer = setTimeout(() => this.clacTop(), 60)
-    })
-    this.$nextTick(() => this.clacTop())
+    window.addEventListener("resize", () => {
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => this.clacTop(), 60);
+    });
+    this.$nextTick(() => this.clacTop());
   },
   methods: {
     // 计算歌词居中的 top值
     clacTop() {
-      const dom = this.$refs.musicLyric
-      // const { display = '' } = window.getComputedStyle(dom)
-      // if (display === 'none') {
-      //   return
-      // }
-      
-      const height = dom.offsetHeight
-      console.log(height);
-      this.top = Math.floor(height / 34 / 2)
-      console.log(this.top);
-    }
-  }
-}
+      const dom = this.$refs.musicLyric;
+      const { display = '' } = window.getComputedStyle(dom)
+      if (display === 'none') {
+        return
+      }
+      const height = dom.offsetHeight;
+      this.top = Math.floor(height / 34 / 2);
+    },
+  },
+};
 </script>
-
 <style lang="less" scoped>
 .music-info {
   padding-bottom: 20px;
