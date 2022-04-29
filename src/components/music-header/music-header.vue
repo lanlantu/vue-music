@@ -1,7 +1,7 @@
 <template>
   <header class="music-header">
     <h1 class="header">
-      <a href="#" target="_blank"> 兰兰兔-在线音乐播放器 </a>
+      <a href="https://github.com/lanlantu" target="_blank"> 兰兰兔-在线音乐播放器 </a>
     </h1>
     <dl class="user"></dl>
   </header>

@@ -20,6 +20,18 @@ const storage={
 }
 
 
+
+ const MODE_KEY = '__Player_mode__'
+ // 获取播放模式
+ export function getMode() {
+   return storage.get(MODE_KEY)
+ }
+ // 修改播放模式
+ export function setMode(mode) {
+   storage.set(MODE_KEY, mode)
+   return mode
+ }
+
 const VOLUME_KEY = '__audio_volume__'
 export function setVolume(volume) {
     storage.set(VOLUME_KEY,volume)

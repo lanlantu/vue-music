@@ -9,7 +9,7 @@ module.exports = defineConfig({
       preProcessor: 'less',
       patterns: [
         path.join(__dirname,'src/styles/var.less'),
-        
+        path.join(__dirname,'src/styles/mixin.less'),
       ]
     }
   },

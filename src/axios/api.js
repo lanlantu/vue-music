@@ -7,6 +7,16 @@ export function getToplistDetail() {
     return axios.get(api+'/toplist/detail')
 }
 
+// 获取歌词
+export function getLyric(id) {
+  const url = api+'/lyric'
+  return axios.get(url, {
+    params: {
+      id
+    }
+  })
+}
+
 // 歌单详情
 export function getPlaylistDetail(id) {
     return new Promise((resolve, reject) => {

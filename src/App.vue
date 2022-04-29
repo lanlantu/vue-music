@@ -39,6 +39,8 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+    color: @text_color;
+  font-size: @font_size_medium;
   .router-view {
     width: 100%;
     height: 100%;

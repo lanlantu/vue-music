@@ -11,7 +11,11 @@ const mutations={
     },
     SET_PLAYING(state,playing){
         state.playing=playing
-    }
+    },
+      // 修改播放模式
+  [types.SET_PLAYMODE](state, mode) {
+    state.mode = mode
+  },
 }
 
 export default mutations

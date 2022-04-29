@@ -7,7 +7,14 @@
           <router-view class="music-list" />
         </keep-alive>
       </div>
-      <div class="music-right"></div>
+      <div class="music-right">
+        <lyric
+          ref="lyric"
+          :lyric="lyric"
+          :nolyric="nolyric"
+          :lyric-index="lyricIndex"
+        />
+      </div>
     </div>
 
     <!-- 底部播放器 -->
@@ -63,7 +70,12 @@
         />
       </div>
       <!-- 播放模式 -->
-      <music-icon class="icon-color pointer mode" type="loop" :size="30" />
+      <music-icon
+        class="icon-color pointer mode"
+        :type="getModeIconType()"
+        :title="getModeIconTitle()"
+        :size="30"
+      />
 
       <!-- 评论 -->
       <music-icon
@@ -86,17 +98,23 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { silencePromise, format } from "@/utils/util";
-import { defaultBG } from '@/utils/config'
+import {
+  silencePromise,
+  format,
+  randomSortArray,
+  parseLyric,
+} from "@/utils/util";
+import { defaultBG, playMode } from "@/utils/config";
 import { setVolume, getVolume } from "@/utils/storage";
 import lanlantuPlayerMusic from "./lanlantuPlayer";
-import { getPlaylistDetail } from "@/axios/api";
+import { getPlaylistDetail, getLyric } from "@/axios/api";
 import musicBtn from "@/components/music-btn/music-btn.vue";
 import MusicIcon from "@/base/music-icon/music-icon.vue";
 import MusicProgress from "@/base/music-progress/music-progress.vue";
 import Volume from "@/base/volume/volume.vue";
+import Lyric from "@/components/lyric/lyric.vue";
 export default {
-  components: { musicBtn, MusicIcon, MusicProgress, Volume },
+  components: { musicBtn, MusicIcon, MusicProgress, Volume, Lyric },
   name: "Music",
   data() {
     return {
@@ -105,6 +123,10 @@ export default {
       currentProgress: 0, // 当前缓冲进度
       isMute: false, // 是否静音
       volume: 1, // 音量大小
+
+      lyric: [], // 歌词
+      nolyric: false, // 是否有歌词
+      lyricIndex: 0, // 当前播放歌词下标
     };
   },
   filters: {
@@ -117,12 +139,14 @@ export default {
       "currentMusic",
       "currentIndex",
       "playlist",
+      "mode",
+      "orderList",
     ]),
 
     picUrl() {
       return this.currentMusic.id && this.currentMusic.image
         ? `url(${this.currentMusic.image}?param=300y300)`
-        : `url(${defaultBG})`
+        : `url(${defaultBG})`;
     },
     percentMusic() {
       return this.currentTime / this.currentMusic.duration;
@@ -131,13 +155,19 @@ export default {
   watch: {
     currentMusic(newMusic, oldMusic) {
       if (!newMusic.id) {
+        this.lyric = [];
         return;
       }
       if (newMusic.id === oldMusic.id) {
         return;
       }
       this.audioEle.src = newMusic.url;
+      // 重置相关参数
+      this.lyricIndex = this.currentTime = this.currentProgress = 0;
       silencePromise(this.audioEle.play());
+      this.$nextTick(() => {
+        this._getLyric(newMusic.id);
+      });
     },
     playing(newPlaying) {
       const audio = this.audioEle;
@@ -145,6 +175,18 @@ export default {
         newPlaying ? silencePromise(audio.play()) : audio.pause();
         this.musicReady = true;
       });
+    },
+    currentTime(newTime) {
+      if (this.nolyric) {
+        return;
+      }
+      let lyricIndex = 0;
+      for (let i = 0; i < this.lyric.length; i++) {
+        if (newTime > this.lyric[i].time) {
+          lyricIndex = i;
+        }
+      }
+      this.lyricIndex = lyricIndex;
     },
   },
   created() {
@@ -162,7 +204,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(["setPlaylist"]),
+    ...mapActions(["setPlaylist", "setPlayMode"]),
     ...mapMutations({
       setPlaying: "SET_PLAYING",
       setCurrentIndex: "SET_CURRENTINDEX",
@@ -216,10 +258,9 @@ export default {
       }
     },
 
-
     // 修改音乐显示时长
     progressMusic(percent) {
-      this.currentTime = this.currentMusic.duration * percent
+      this.currentTime = this.currentMusic.duration * percent;
     },
     //音乐进度条||等钱音乐播放时间
     progressMusicEnd(percent) {
@@ -230,9 +271,9 @@ export default {
       this.audioEle.currentTime = 0;
       silencePromise(this.audioEle.play());
       this.setPlaying(true);
-      // if (this.lyric.length > 0) {
-      //   this.lyricIndex = 0
-      // }
+      if (this.lyric.length > 0) {
+        this.lyricIndex = 0;
+      }
     },
 
     //修改音量大小
@@ -241,6 +282,67 @@ export default {
       this.volume = percent;
       this.audioEle.volume = percent;
       setVolume(percent);
+    },
+
+    // 切换播放顺序
+    modeChange() {
+      const mode = (this.mode + 1) % 4;
+      this.setPlayMode(mode);
+      if (mode === playMode.loop) {
+        return;
+      }
+      let list = [];
+      switch (mode) {
+        case playMode.listLoop:
+        case playMode.order:
+          list = this.orderList;
+          break;
+        case playMode.random:
+          list = randomSortArray(this.orderList);
+          break;
+      }
+      this.resetCurrentIndex(list);
+      this.setPlaylist(list);
+    },
+    // 修改当前歌曲索引
+    resetCurrentIndex(list) {
+      const index = list.findIndex((item) => {
+        return item.id === this.currentMusic.id;
+      });
+      this.setCurrentIndex(index);
+    },
+    // 获取播放模式 icon
+    getModeIconType() {
+      return {
+        [playMode.listLoop]: "loop",
+        [playMode.order]: "sequence",
+        [playMode.random]: "random",
+        [playMode.loop]: "loop-one",
+      }[this.mode];
+    },
+
+    // 获取播放模式 title
+    getModeIconTitle() {
+      const key = "Ctrl + O";
+      return {
+        [playMode.listLoop]: `列表循环 ${key}`,
+        [playMode.order]: `顺序播放 ${key}`,
+        [playMode.random]: `随机播放 ${key}`,
+        [playMode.loop]: `单曲循环 ${key}`,
+      }[this.mode];
+    },
+    // 获取歌词
+    _getLyric(id) {
+      getLyric(id).then((res) => {
+        if (res.nolyric) {
+          this.nolyric = true;
+        } else {
+          this.nolyric = false;
+          this.lyric = parseLyric(res.lrc.lyric);
+          console.log(this.lyric);
+        }
+        silencePromise(this.audioEle.play());
+      });
     },
   },
 };
@@ -267,9 +369,8 @@ export default {
       }
     }
     .music-right {
-      background-color: greenyellow;
-      height: 100%;
-      width: 300px;
+      position: relative;
+      width: 310px;
       margin-left: 10px;
     }
   }
@@ -291,13 +392,11 @@ export default {
       align-items: center;
       width: 180px;
       .control-play {
+        .flex-center;
         border-radius: 50%;
         width: 40px;
         height: 40px;
         background-color: rgba(255, 255, 255, 0.3);
-        .bofang {
-          transform: translate(2px, 2px);
-        }
       }
     }
 
@@ -353,7 +452,7 @@ export default {
     z-index: -2;
     opacity: 0.5;
     transition: all 0.8s;
-    transform: scale(1.1);
+    transform: scale(1);
   }
 }
 </style>
