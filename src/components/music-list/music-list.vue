@@ -110,7 +110,7 @@ export default {
   width: 100%;
   height: 100%;
   .list-item.list-header {
-    height: 60px;
+    height: 50px;
     width: 100%;
     border-bottom: 1px solid @list_head_line_color;
     color: @text_color_active;

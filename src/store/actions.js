@@ -13,3 +13,11 @@ export const setPlayMode = function ({ commit }, mode) {
 export const setUid = function ({ commit }, uid) {
         commit(types.SET_UID, setUserId(uid))
 }
+
+
+// 选择播放（会更新整个播放列表）
+export const selectPlay = function({ commit }, { list, index }) {
+        commit(types.SET_PLAYLIST, list)
+        commit(types.SET_CURRENTINDEX, index)
+        commit(types.SET_PLAYING, true)
+      }

@@ -31,7 +31,11 @@ const routes=[
             {
                 path:'/music/comment/:id',
                 component:()=>import('@/views/comment/comment')
-            }
+            },
+            {
+                path: '/music/details/:id', // 音乐详情列表
+                component: () => import('@/views/details/details')
+              },
         ]
     }
 

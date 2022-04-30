@@ -96,3 +96,9 @@ export function getUserPlaylist(uid) {
     }
   })
 }
+
+// 推荐歌单
+export function getPersonalized() {
+  return axios.get(api+'/personalized')
+}
+
