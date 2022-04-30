@@ -1,22 +1,26 @@
+import {defaultVolume} from '@/utils/config'
 const _storage = window.localStorage
 
-const storage={
-
-    set(key,val){
-        if (_storage) {
-            _storage.setItem(key,val)
-        }
-    },
-    get(key) {
-        if (_storage) {
-          return _storage.getItem(key) 
-        }
-      },
-    clear(key) {
-        if (_storage) {
-          _storage.removeItem(key)
-        }
-      }
+const storage = {
+  get(key, data = []) {
+    if (_storage) {
+      return _storage.getItem(key)
+        ? Array.isArray(data)
+          ? JSON.parse(_storage.getItem(key))
+          : _storage.getItem(key)
+        : data
+    }
+  },
+  set(key, val) {
+    if (_storage) {
+      _storage.setItem(key, val)
+    }
+  },
+  clear(key) {
+    if (_storage) {
+      _storage.removeItem(key)
+    }
+  }
 }
 
 
@@ -38,7 +42,7 @@ export function setVolume(volume) {
 }
 
 export function getVolume() {
-    const volume = storage.get(VOLUME_KEY)
+    const volume = storage.get(VOLUME_KEY,defaultVolume)
   return Number(volume)
 }
 

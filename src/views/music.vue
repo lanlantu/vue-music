@@ -285,6 +285,7 @@ export default {
 
     //修改音量大小
     volumeChange(percent) {
+      percent = Number(percent.toFixed(2)); //处理小数点位数过多导致浏览器报错
       percent === 0 ? (this.isMute = true) : (this.isMute = false);
       this.volume = percent;
       this.audioEle.volume = percent;
@@ -350,15 +351,14 @@ export default {
         silencePromise(this.audioEle.play());
       });
     },
- // 打开音乐评论
+    // 打开音乐评论
     openComment() {
       if (!this.currentMusic.id) {
-        this.$musicMessage('还没有播放歌曲哦！')
-        return false
+        this.$musicMessage("还没有播放歌曲哦！");
+        return false;
       }
-      this.$router.push(`/music/comment/${this.currentMusic.id}`)
+      this.$router.push(`/music/comment/${this.currentMusic.id}`);
     },
-
   },
 };
 </script>

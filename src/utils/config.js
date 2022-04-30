@@ -10,6 +10,8 @@ export const NOTICE_INFO = `<div>
 // 默认分页数量
 export const defaultLimit = 30
 
+//默认音量
+export const defaultVolume=1;
 
 // 默认背景图（可引入网络图或本地静态图）
 const requireAll = requireContext => requireContext.keys().map(requireContext)

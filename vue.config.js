@@ -19,24 +19,24 @@ module.exports = defineConfig({
       ]
     }
   },
-  devServer: {
-    proxy: {
-      '/api': {
-        // target: 'https://cloud-music-api-red-rho.vercel.app',
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      },
-      '/test': {
-        target: 'http://localhost:8090',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/test': ''
-        }
-      }
-    }
-  }
+  // devServer: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://cloud-music-api-red-rho.vercel.app',
+  //       // target: 'http://localhost:3000',
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/api': ''
+  //       }
+  //     },
+  //     '/test': {
+  //       target: 'http://localhost:8090',
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/test': ''
+  //       }
+  //     }
+  //   }
+  // }
 
 })

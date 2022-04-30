@@ -5,12 +5,12 @@ const api = '/api'
 const test = '/test'
 // 排行榜列表
 export function getToplistDetail() {
-  return axios.get(api + '/toplist/detail')
+  return axios.get('/toplist/detail')
 }
 
 // 获取歌词
 export function getLyric(id) {
-  const url = api + '/lyric'
+  const url = '/lyric'
   return axios.get(url, {
     params: {
       id
@@ -22,7 +22,7 @@ export function getLyric(id) {
 export function getPlaylistDetail(id) {
   return new Promise((resolve, reject) => {
     axios
-      .get(api + '/playlist/detail', {
+      .get('/playlist/detail', {
         params: { id }
       })
       .then(({ playlist }) => playlist || {})
@@ -53,7 +53,7 @@ export function getPlaylistDetail(id) {
 
 // 搜索
 export function search(keywords, page = 0, limit = defaultLimit) {
-  return axios.get(api+'/search', {
+  return axios.get('/search', {
     params: {
       offset: page * limit,
       limit: limit,
@@ -64,7 +64,7 @@ export function search(keywords, page = 0, limit = defaultLimit) {
 
 // 获取歌曲详情
 export function getMusicDetail(ids) {
-  return axios.get(api+'/song/detail', {
+  return axios.get('/song/detail', {
     params: {
       ids
     }
@@ -74,7 +74,7 @@ export function getMusicDetail(ids) {
 
 // 获取音乐评论
 export function getComment(id, page, limit = defaultLimit) {
-  return axios.get(api + '/comment/music', {
+  return axios.get( '/comment/music', {
     params: {
       offset: page * limit,
       limit: limit,
@@ -85,12 +85,12 @@ export function getComment(id, page, limit = defaultLimit) {
 
 // 热搜
 export function searchHot() {
-  return axios.get(api+'/search/hot')
+  return axios.get('/search/hot')
 }
 
 // 获取用户歌单详情
 export function getUserPlaylist(uid) {
-  return axios.get(api+'/user/playlist', {
+  return axios.get('/user/playlist', {
     params: {
       uid
     }
@@ -99,6 +99,6 @@ export function getUserPlaylist(uid) {
 
 // 推荐歌单
 export function getPersonalized() {
-  return axios.get(api+'/personalized')
+  return axios.get('/personalized')
 }
 
