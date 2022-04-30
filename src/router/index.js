@@ -27,6 +27,10 @@ const routes=[
             {
                 path:'/music/search',
                 component:()=>import('@/views/search/search')
+            },
+            {
+                path:'/music/comment/:id',
+                component:()=>import('@/views/comment/comment')
             }
         ]
     }

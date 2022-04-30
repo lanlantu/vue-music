@@ -82,6 +82,7 @@
         class="icon-color pointer comment"
         type="comment"
         :size="30"
+        @click="openComment"
       />
 
       <!-- 音量控制 -->
@@ -343,6 +344,15 @@ export default {
         silencePromise(this.audioEle.play());
       });
     },
+ // 打开音乐评论
+    openComment() {
+      if (!this.currentMusic.id) {
+        this.$musicMessage('还没有播放歌曲哦！')
+        return false
+      }
+      this.$router.push(`/music/comment/${this.currentMusic.id}`)
+    },
+
   },
 };
 </script>
