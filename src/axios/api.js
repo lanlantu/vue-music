@@ -1,5 +1,6 @@
 import axios from '@/axios/axios'
 import {formatTopSongs} from '@/utils/song'
+import {defaultLimit} from '@/utils/config'
 const api= '/api'
 const test='/test'
 // 排行榜列表
@@ -49,3 +50,15 @@ export function getPlaylistDetail(id) {
         })
     })
   }
+
+
+  // 获取音乐评论
+export function getComment(id, page, limit = defaultLimit) {
+  return axios.get(api+'/comment/music', {
+    params: {
+      offset: page * limit,
+      limit: limit,
+      id
+    }
+  })
+}

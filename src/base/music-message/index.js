@@ -7,7 +7,7 @@ let time
 const musicMessage={
     install(Vue,options={}){
         let opt =TempMessage.data()
-        Object.assign(opt,options)
+        Object.assign(opt,options)//合并信息,若有相同的键，则后面会覆盖前面值
         Vue.prototype.$musicMessage=(message,position) =>{
                 if(showToast){
                     clearTimeout(time)

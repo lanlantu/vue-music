@@ -4,12 +4,19 @@ import router from '@/router'
 import store  from '@/store'
 import musicMessage from '@/base/music-message'
 import Icon from '@/base/music-icon/music-icon'
+import VueLazyload from 'vue-lazyload'
 Vue.config.productionTip = false
 import'@/styles/index.less'
 
 // 弹出层
 Vue.use(musicMessage)
 
+
+// 懒加载
+Vue.use(VueLazyload, {
+  preLoad: 1,
+  loading: require('@/assets/img/default.png')
+})
 
 // icon 组件
 Vue.component(Icon.name, Icon)
