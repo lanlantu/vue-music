@@ -13,7 +13,7 @@
         v-model.trim="searchValue"
         class="search-input"
         type="text"
-        placeholder="音乐/歌手"
+        placeholder="请输入要查找的：音乐/歌手"
         @keyup.enter="onEnter"
       />
     </div>

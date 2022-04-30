@@ -41,3 +41,19 @@ export function getVolume() {
     const volume = storage.get(VOLUME_KEY)
   return Number(volume)
 }
+
+/**
+ * 网易云用户uid
+ * @type USERID_KEY：key值
+ */
+ const USERID_KEY = '__Player_userID__'
+ // 获取用户uid
+ export function getUserId() {
+   return Number(storage.get(USERID_KEY, null))
+ }
+ // 修改用户uid
+ export function setUserId(uid) {
+   storage.set(USERID_KEY, uid)
+   return uid
+ }
+ 

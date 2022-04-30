@@ -87,3 +87,12 @@ export function getComment(id, page, limit = defaultLimit) {
 export function searchHot() {
   return axios.get(api+'/search/hot')
 }
+
+// 获取用户歌单详情
+export function getUserPlaylist(uid) {
+  return axios.get(api+'/user/playlist', {
+    params: {
+      uid
+    }
+  })
+}
