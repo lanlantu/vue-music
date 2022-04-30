@@ -1,5 +1,15 @@
+export const LANLANTU_VERSION= '1.0.0'
+
+export const NOTICE_INFO = `<div>
+当前版本: ${LANLANTU_VERSION}（${process.env.VUE_APP_UPDATE_TIME}）<br>
+1、 当前为开发版本，存在些许bug<br>
+2、 基本功能都已实现<br>
+3、 本网站正在开发优化中<br>
+</div>`
+
 // 默认分页数量
 export const defaultLimit = 30
+
 
 // 默认背景图（可引入网络图或本地静态图）
 const requireAll = requireContext => requireContext.keys().map(requireContext)

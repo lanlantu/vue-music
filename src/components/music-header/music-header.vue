@@ -137,7 +137,7 @@ export default {
         creator.avatarUrl = toHttps(creator.avatarUrl)
         this.user = creator
         setTimeout(() => {
-          this.$musicMessage(`${this.user.nickname} 欢迎使用 musicPlayer`)
+          this.$musicMessage(`${this.user.nickname} 欢迎使用 兰兰兔-在线音乐播放器`)
         }, 200)
       })
     },
