@@ -4,8 +4,14 @@
       <div class="music-left">
         <music-btn />
         <keep-alive>
-          <router-view class="music-list" />
+          <router-view v-if="$route.meta.keepAlive" class="music-list" />
         </keep-alive>
+        <!-- 不设置key当在子路由来回切换时，会导致页面不刷新的问题，这是因为不再执行created和mounted这些钩子函数 -->
+        <router-view
+          v-if="!$route.meta.keepAlive"
+          :key="$route.path"
+          class="music-list"
+        />
       </div>
       <div class="music-right">
         <lyric

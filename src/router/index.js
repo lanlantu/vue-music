@@ -14,19 +14,34 @@ const routes=[
         children:[
             {
                 path:'/music/playlist',
-                component:()=>import('@/views/playList/playList')
+                component:()=>import('@/views/playList/playList'),
+                meta: {
+                    keepAlive: true
+                  }
             },
             {
                 path:'/music/userlist',
-                component:()=>import('@/views/userList/userList')
+                component:()=>import('@/views/userList/userList'),
+                meta: {
+                    title: '用户歌单',
+                    keepAlive: true
+                  }
             },
             {
                 path:'/music/discoverylist',
-                component:()=>import('@/views/discoveryList/discoveryList')
+                component:()=>import('@/views/discoveryList/discoveryList'),
+                meta: {
+                    title: '推荐歌单',
+                    keepAlive: true
+                  }
             },
             {
                 path:'/music/search',
-                component:()=>import('@/views/search/search')
+                component:()=>import('@/views/search/search'),
+                meta: {
+                    title: '搜索',
+                    keepAlive: true
+                  }
             },
             {
                 path:'/music/comment/:id',

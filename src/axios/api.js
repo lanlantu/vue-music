@@ -38,15 +38,15 @@ export function getPlaylistDetail(id) {
           resolve(playlist)
           return
         }
-        //   // 限制歌单详情最大 500
-        //   const ids = trackIds
-        //     .slice(0, 500)
-        //     .map(v => v.id)
-        //     .toString()
-        //   getMusicDetail(ids).then(({ songs }) => {
-        //     playlist.tracks = formatTopSongs(songs)
-        //     resolve(playlist)
-        //   })
+          // 限制歌单详情最大 500
+          const ids = trackIds
+            .slice(0, 500)
+            .map(v => v.id)
+            .toString()
+          getMusicDetail(ids).then(({ songs }) => {
+            playlist.tracks = formatTopSongs(songs)
+            resolve(playlist)
+          })
       })
   })
 }
