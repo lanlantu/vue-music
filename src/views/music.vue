@@ -339,7 +339,6 @@ export default {
         } else {
           this.nolyric = false;
           this.lyric = parseLyric(res.lrc.lyric);
-          console.log(this.lyric);
         }
         silencePromise(this.audioEle.play());
       });
