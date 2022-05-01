@@ -459,7 +459,7 @@ export default {
   }
 
   .music-bg {
-    background-image: url(@/assets/background/4.jpg);
+    background-image: url(@/assets/background/background.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 50%;
