@@ -1,11 +1,20 @@
-export const LANLANTU_VERSION= '1.0.0'
+export const LANLANTU_VERSION= '1.1.0'
 
 export const NOTICE_INFO = `<div>
 当前版本: ${LANLANTU_VERSION}（${process.env.VUE_APP_UPDATE_TIME}）<br>
-1、 当前为开发版本，存在些许bug<br>
-2、 基本功能都已实现<br>
-3、 本网站正在开发优化中<br>
+历史版本：<br>
+1.0.0<br>
+1、 开发完成版本<br>
+2、 规划的功能基本都已实现，细节方面可以优化<br>
+3、 目前正在增加新功能、优化中<br>
+4、 存在一些bug，正在修复优化中<br>
+<br>
+1.1.0<br>
+1、 修复网站打开音量为静音<br>
+2、 修复调节音量控制台报错<br>
+
 </div>`
+
 
 // 默认分页数量
 export const defaultLimit = 30

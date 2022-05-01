@@ -207,6 +207,13 @@ export default {
   }
 }
 
+
+.music-dialog-text{
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 @keyframes music-dialog-fadein {
   0% {
     opacity: 0;
