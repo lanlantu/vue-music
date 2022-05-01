@@ -28,8 +28,8 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     document.title =
-      (to.meta.title && `${to.meta.title} - 兰兰兔在线音乐播放器`) ||
-      '兰兰兔在线音乐播放器'
+      (to.meta.title && `${to.meta.title} - 兰兰兔`) ||
+      '兰兰兔'
     next()
   }
 })
