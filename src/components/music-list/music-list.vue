@@ -42,7 +42,9 @@
         </div>
       </div>
     </template>
-    <div v-else>未查到数据</div>
+    <div v-else class="funly">
+      <mousefunly/>
+    </div>
   </div>
 </template>
 
@@ -50,12 +52,13 @@
 import { mapGetters, mapMutations } from "vuex";
 import { format } from "@/utils/util";
 import musicIcon from "@/base/music-icon/music-icon.vue";
+import Mousefunly from '../funly/mousefunly.vue';
 
 const LIST_TYPE_ALBUM = "album";
 const LIST_TYPE_DURATION = "duration";
 const LIST_TYPE_PULLUP = "pullup";
 export default {
-  components: { musicIcon },
+  components: { musicIcon,Mousefunly },
   props: {
     list: {
       type: Array,
@@ -212,6 +215,14 @@ export default {
         transform: translateY(-50%);
       }
     }
+  }
+
+  .funly{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
   }
 }
 </style>
