@@ -56,6 +56,9 @@
           @click="next"
         />
       </div>
+      <div class="smallImage">
+        <img :src="musicPicUrl" alt="" />
+      </div>
       <div class="music-music">
         <div class="music-bar-info">
           <template v-if="currentMusic && currentMusic.id">
@@ -157,6 +160,11 @@ export default {
     },
     percentMusic() {
       return this.currentTime / this.currentMusic.duration;
+    },
+    musicPicUrl() {
+      return this.currentMusic.id && this.currentMusic.image
+        ? `${this.currentMusic.image}?param=50y50`
+        : `${defaultBG}`;
     },
   },
   watch: {
@@ -415,11 +423,23 @@ export default {
       }
     }
 
+    .smallImage {
+      width: 50px;
+      height: 50px;
+      margin-left: 40px;
+      img {
+        width: 50px;
+        height: 50px;
+      border-radius: 30px;
+
+      }
+    }
+
     .music-music {
       position: relative;
       width: 100%;
       flex: 1;
-      padding-left: 40px;
+      padding-left: 10px;
       font-size: @font_size_small;
       color: @text_color_active;
       .music-bar-info {
