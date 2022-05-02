@@ -164,7 +164,7 @@ export default {
     musicPicUrl() {
       return this.currentMusic.id && this.currentMusic.image
         ? `${this.currentMusic.image}?param=50y50`
-        : `${defaultBG}`;
+        : require("@/assets/img/default.png");
     },
   },
   watch: {
