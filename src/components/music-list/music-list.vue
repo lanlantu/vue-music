@@ -50,14 +50,13 @@
 import { mapGetters, mapMutations } from "vuex";
 import { format } from "@/utils/util";
 import musicIcon from "@/base/music-icon/music-icon.vue";
-import Mousefunly from '../funly/mousefunly.vue';
 import MusicResult from "@/base/music-result/music-result.vue";
 
 const LIST_TYPE_ALBUM = "album";
 const LIST_TYPE_DURATION = "duration";
 const LIST_TYPE_PULLUP = "pullup";
 export default {
-  components: { musicIcon, Mousefunly, MusicResult },
+  components: { musicIcon, MusicResult },
   props: {
     list: {
       type: Array,
