@@ -1,6 +1,7 @@
 <template>
   <!--搜索-->
   <div class="search">
+    <MusicLoading v-model="LoadShow" />
     <div class="search-head">
       <span
         v-for="(item, index) in Artists"
@@ -36,12 +37,15 @@ import { search, searchHot, getMusicDetail } from "@/axios/api";
 import { formatSongs } from "@/utils/song";
 import MusicList from "@/components/music-list/music-list";
 import { toHttps } from "@/utils/util";
+import MusicLoading from "@/base/music-loading/music-loading.vue";
+import { loadMixin } from "@/utils/mixin";
 
 export default {
   name: "Search",
   components: {
     MusicList,
-  },
+    MusicLoading
+},
   data() {
     return {
       searchValue: "", // 搜索关键词
@@ -51,6 +55,7 @@ export default {
       lockUp: true, // 是否锁定上拉加载事件,默认锁定
     };
   },
+  mixins:[loadMixin],
   computed: {
     ...mapGetters(["playing", "currentMusic"]),
   },
@@ -69,6 +74,7 @@ export default {
     // 获取热搜
     searchHot().then(({ result }) => {
       this.Artists = result.hots.slice(0, 5);
+       this.LoadShow = false
     });
   },
   methods: {
@@ -83,12 +89,14 @@ export default {
         this.$musicMessage("搜索内容不能为空！");
         return;
       }
+        this.LoadShow = true
       this.page = 0;
       if (this.list.length > 0) {
         this.$refs.musicList.scrollTo();
       }
       search(this.searchValue).then(({ result }) => {
         this.list = formatSongs(result.songs);
+          this._hideLoad()
       });
     },
     // 滚动加载事件

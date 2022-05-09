@@ -1,4 +1,4 @@
-export const LANLANTU_VERSION= '1.1.0'
+export const LANLANTU_VERSION= '1.1.1'
 
 export const NOTICE_INFO = `<div>
 当前版本: ${LANLANTU_VERSION}（${process.env.VUE_APP_UPDATE_TIME}）<br>
@@ -12,6 +12,10 @@ export const NOTICE_INFO = `<div>
 1.1.0<br>
 1、 修复网站打开音量为静音<br>
 2、 修复调节音量控制台报错<br>
+1.1.1<br>
+1、 添加loading组件，搜索加载数据时，显示loading<br>
+
+
 
 </div>`
 
