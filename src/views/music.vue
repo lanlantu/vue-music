@@ -99,6 +99,9 @@
         <volume :volume="volume" @volumeChange="volumeChange" />
       </div>
     </div>
+    <div class="records">
+      <a href="https://beian.miit.gov.cn/">蜀ICP备2021014083号-2</a>
+      </div>
 
     <!--遮罩-->
     <div class="music-bg" :style="{ backgroundImage: picUrl }"></div>
@@ -488,5 +491,11 @@ export default {
     transition: all 0.8s;
     transform: scale(1);
   }
+}
+
+.records{
+  text-align: center;
+  font-size: 14px;
+  color:coral;
 }
 </style>
