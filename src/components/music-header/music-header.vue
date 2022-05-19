@@ -2,9 +2,7 @@
   <!--头部-->
   <header class="music-header">
     <h1 class="header">
-      <a href="#" target="_blank">
-        兰兰兔-在线音乐播放器
-      </a>
+      <a href="#" target="_blank"> 兰兰兔-在线音乐播放器 </a>
     </h1>
     <dl class="user">
       <template v-if="user.userId">
@@ -34,7 +32,18 @@
           @keyup.enter="login"
         />
       </div>
+
       <div slot="btn" @click="openDialog(1)">帮助</div>
+      <div slot="qqlogin">
+        <img src="@/assets/img/qqlogin_24X24.png" alt="" @click="toLogin" />
+      </div>
+      <div slot="weibologin">
+        <a
+          href="https://api.weibo.com/oauth2/authorize?client_id=3459360514&response_type=code&redirect_uri=http://lanlantu.cn/"
+        >
+          <img src="@/assets/img/weibo.jpg" alt="" />
+        </a>
+      </div>
     </music-dialog>
     <!--帮助-->
     <music-dialog
@@ -67,83 +76,91 @@
 </template>
 
 <script>
-import { getUserPlaylist } from '@/axios/api'
-import { mapGetters, mapActions } from 'vuex'
-import { toHttps } from '@/utils/util'
-import MusicDialog from '@/base/music-dialog/music-dialog.vue'
+import { getUserPlaylist } from "@/axios/api";
+import { mapGetters, mapActions } from "vuex";
+import { toHttps } from "@/utils/util";
+import MusicDialog from "@/base/music-dialog/music-dialog.vue";
 
 export default {
-  name: 'MusicHeader',
+  name: "MusicHeader",
   components: {
-    MusicDialog
+    MusicDialog,
   },
   data() {
     return {
       user: {}, // 用户数据
-      uidValue: '' // 记录用户 UID
-    }
+      uidValue: "", // 记录用户 UID
+    };
   },
   computed: {
-    ...mapGetters(['uid'])
+    ...mapGetters(["uid"]),
   },
   created() {
-    this.uid && this._getUserPlaylist(this.uid)
+    this.uid && this._getUserPlaylist(this.uid);
   },
   methods: {
     // 打开对话框
     openDialog(key) {
       switch (key) {
         case 0:
-          this.$refs.loginDialog.show()
-          break
+          this.$refs.loginDialog.show();
+          break;
         case 1:
-          this.$refs.loginDialog.hide()
-          this.$refs.helpDialog.show()
-          break
+          this.$refs.loginDialog.hide();
+          this.$refs.helpDialog.show();
+          break;
         case 2:
-          this.$refs.outDialog.show()
-          break
+          this.$refs.outDialog.show();
+          break;
         case 3:
-          this.$refs.loginDialog.hide()
-          break
+          this.$refs.loginDialog.hide();
+          break;
       }
     },
     // 退出登录
     out() {
-      this.user = {}
-      this.setUid(null)
-      this.$musicMessage('退出成功！')
+      this.user = {};
+      this.setUid(null);
+      this.$musicMessage("退出成功！");
     },
     // 登录
     login() {
-      if (this.uidValue === '') {
-        this.$musicMessage('UID 不能为空')
-        this.openDialog(0)
-        return
+      if (this.uidValue === "") {
+        this.$musicMessage("UID 不能为空");
+        this.openDialog(0);
+        return;
       }
-      this.openDialog(3)
-      this._getUserPlaylist(this.uidValue)
+      this.openDialog(3);
+      this._getUserPlaylist(this.uidValue);
     },
     // 获取用户数据
     _getUserPlaylist(uid) {
       getUserPlaylist(uid).then(({ playlist = [] }) => {
-        this.uidValue = ''
+        this.uidValue = "";
         if (playlist.length === 0 || !playlist[0].creator) {
-          this.$musicMessage(`未查询找 UID 为 ${uid} 的用户信息`)
-          return
+          this.$musicMessage(`未查询找 UID 为 ${uid} 的用户信息`);
+          return;
         }
-        const creator = playlist[0].creator
-        this.setUid(uid)
-        creator.avatarUrl = toHttps(creator.avatarUrl)
-        this.user = creator
+        const creator = playlist[0].creator;
+        this.setUid(uid);
+        creator.avatarUrl = toHttps(creator.avatarUrl);
+        this.user = creator;
         setTimeout(() => {
-          this.$musicMessage(`${this.user.nickname} 欢迎使用 兰兰兔-在线音乐播放器`)
-        }, 200)
-      })
+          this.$musicMessage(
+            `${this.user.nickname} 欢迎使用 兰兰兔-在线音乐播放器`
+          );
+        }, 200);
+      });
     },
-    ...mapActions(['setUid'])
-  }
-}
+    toLogin() {
+      let url =
+        "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=102009816&redirect_uri=https://www.baidu.com/&scope=scope&display=display";
+
+      window.open(url, "_self");
+    },
+    ...mapActions(["setUid"]),
+  },
+};
 </script>
 
 <style lang="less">

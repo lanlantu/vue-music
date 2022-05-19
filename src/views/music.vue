@@ -100,7 +100,7 @@
       </div>
     </div>
     <div class="records">
-      <a href="https://beian.miit.gov.cn/">蜀ICP备2021014083号-2</a>
+      <a href="https://beian.miit.gov.cn/" target="_blank">蜀ICP备2021014083号-2</a>
       </div>
 
     <!--遮罩-->

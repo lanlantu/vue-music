@@ -17,6 +17,9 @@
               v-text="cancelBtnText"
             ></div>
             <slot name="btn"></slot>
+            <slot name="qqlogin" class="qqlogin"></slot>
+            <slot name="weibologin" class="login"></slot>
+          
             <div
               class="music-btn-confirm"
               @click="confirm"
@@ -212,6 +215,11 @@ export default {
   max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+.login{
+  width: 30px;
+  height: 30px;
+  background-color: chartreuse;
 }
 
 @keyframes music-dialog-fadein {
