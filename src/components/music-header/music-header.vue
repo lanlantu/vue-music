@@ -34,15 +34,11 @@
       </div>
 
       <div slot="btn" @click="openDialog(1)">帮助</div>
-      <div slot="qqlogin">
-        <img src="@/assets/img/qqlogin_24X24.png" alt="" @click="toLogin" />
+      <div slot="qqlogin" @click="toLogin(1)">
+        <img src="@/assets/img/qqlogin_24X24.png" alt="" />
       </div>
-      <div slot="weibologin">
-        <a
-          href="https://api.weibo.com/oauth2/authorize?client_id=3459360514&response_type=code&redirect_uri=http://lanlantu.cn/"
-        >
+      <div slot="weibologin" @click="toLogin(2)">
           <img src="@/assets/img/weibo.jpg" alt="" />
-        </a>
       </div>
     </music-dialog>
     <!--帮助-->
@@ -152,9 +148,16 @@ export default {
         }, 200);
       });
     },
-    toLogin() {
-      let url =
-        "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=102009816&redirect_uri=https://www.baidu.com/&scope=scope&display=display";
+    toLogin(number) {
+      let url;
+      if (number == 1) {
+        url =
+          "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=102009816&redirect_uri=https://www.baidu.com/&scope=scope&display=display";
+      }
+      if (number == 2) {
+         url =
+          "https://api.weibo.com/oauth2/authorize?client_id=3459360514&response_type=code&redirect_uri=http://lanlantu.cn/";
+      }
 
       window.open(url, "_self");
     },
