@@ -152,7 +152,7 @@ export default {
       let url;
       if (number == 1) {
         url =
-          "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=102009816&redirect_uri=https://www.baidu.com/&scope=scope&display=display";
+          "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=102009968&redirect_uri=https://im.qq.com/index&scope=scope&display=display";
       }
       if (number == 2) {
          url =
