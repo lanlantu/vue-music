@@ -36,7 +36,6 @@
 export default {
   name: 'MusicDialog',
   props: {
-    // type：confirm、alert
     type: {
       type: String,
       default: 'confirm'
