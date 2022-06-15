@@ -22,7 +22,7 @@
     <!--歌词-->
     <div ref="musicLyric" class="music-lyric">
       <div class="music-lyric-items" :style="lyricTop">
-        <p v-if="!currentMusic.id">还没有播放音乐哦！</p>
+        <p v-if="!currentMusic.id">没有正在播放音乐哦！</p>
         <p v-else-if="nolyric">暂无歌词！</p>
         <template v-else-if="lyric.length > 0">
           <p
