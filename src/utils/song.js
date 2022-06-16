@@ -11,7 +11,6 @@ export const formatTopSongs = function formatTopList(list) {
   return Songs
 }
 
-// 歌曲数据格式化
 export const formatSongs = function formatPlayList(list) {
   let Songs = []
   list.forEach(item => {
