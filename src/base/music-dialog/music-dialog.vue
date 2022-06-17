@@ -59,6 +59,7 @@ export default {
     confirmBtnText: {
       type: String,
       default: '确定'
+      
     },
     // Dialog 是否插入至 body 元素下
     appendToBody: {
