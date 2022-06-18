@@ -109,6 +109,7 @@ export default {
       this.$emit('cancel')
     },
     // 确定事件
+    //2022618
     confirm() {
       this.hide()
       this.$emit('confirm')
