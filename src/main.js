@@ -35,14 +35,14 @@ router.beforeEach((to, from, next) => {
 })
 
 
-window.mmplayer = `欢迎使用 lanlantuPlayer!
-作者：兰兰兔
-Github：https://github.com/lanlantu
-api接口来源于Github开源项目:Binaryify/NeteaseCloudMusicApi
-歌曲来源于网易云音乐 (https://music.163.com)
-`
-// eslint-disable-next-line no-console
-console.info(`%c${window.mmplayer}`, `color:green`)
+// window.mmplayer = `欢迎使用 lanlantuPlayer!
+// 作者：兰兰兔
+// Github：https://github.com/lanlantu
+// api接口来源于Github开源项目:Binaryify/NeteaseCloudMusicApi
+// 歌曲来源于网易云音乐 (https://music.163.com)
+// `
+// // eslint-disable-next-line no-console
+// console.info(`%c${window.mmplayer}`, `color:green`)
 
 
 new Vue({
