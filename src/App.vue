@@ -32,6 +32,8 @@ export default {
     this.noticeInfo = NOTICE_INFO;
       this.openDialog()
     // 设置audio元素
+    // 
+    // 
     this.$nextTick(() => {
       this.setAudioEle(this.$refs.lanlantuPlayer);
     });
