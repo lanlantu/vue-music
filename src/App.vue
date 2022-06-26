@@ -38,9 +38,10 @@ export default {
       this.setAudioEle(this.$refs.lanlantuPlayer);
     });
   },
+
   methods: {
     // ...mapMutations(['SET_AUDIOELE'])
-    ...mapMutations({
+    ...mapMutations({ 
       setAudioEle: "SET_AUDIOELE",
     }),
 
