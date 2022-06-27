@@ -3,7 +3,7 @@
     <music-header />
     <router-view class="router-view"></router-view>
 
-    <music-dialog
+    <music-dialog1
       ref="versionDialog"
         type="alert"
       head-text="兰兰兔-小提示"
@@ -38,7 +38,8 @@ export default {
       this.setAudioEle(this.$refs.lanlantuPlayer);
     });
   },
-
+// 13755035258
+// 17828457105
   methods: {
     // ...mapMutations(['SET_AUDIOELE'])
     ...mapMutations({ 
