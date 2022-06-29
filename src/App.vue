@@ -25,7 +25,7 @@ export default {
   name: "App",
   components: {
     MusicHeader,
-    MusicDialog,
+    MusicDialog,XXXXXXX
   },
   computed: {},
   created() {
@@ -33,6 +33,7 @@ export default {
       this.openDialog()
     // 设置audio元素
     // 
+    
     // 
     this.$nextTick(() => { 
       this.setAudioEle(this.$refs.lanlantuPlayer);
@@ -42,6 +43,7 @@ export default {
 // 17828457105
   methods: {
     // ...mapMutations(['SET_AUDIOELE'])
+    
     ...mapMutations({ 
       setAudioEle: "SET_AUDIOELE",
     }),
